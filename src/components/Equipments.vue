@@ -4,6 +4,7 @@
       <v-skeleton-loader
         v-for="n in 6"
         v-if="isLoading"
+        :key="n"
         type="list-item-two-line"
       ></v-skeleton-loader>
       <v-card
