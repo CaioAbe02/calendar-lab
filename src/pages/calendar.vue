@@ -121,7 +121,7 @@ const calendarApp = shallowRef(createCalendar({
   monthGridOptions: {
     nEventsPerDay: 3,
   },
-  isDark: true,
+  isDark: false,
 }))
 
 function refreshEvents() {
