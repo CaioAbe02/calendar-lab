@@ -15,7 +15,7 @@
       >
       <template v-slot:append>
         <v-btn icon="mdi-pencil" @click.stop="openFormEdit(equipment)"></v-btn>
-        <v-btn icon="mdi-delete"></v-btn>
+        <v-btn icon="mdi-delete" @click.stop="removeEquipment(equipment.id)"></v-btn>
       </template>
       </v-card>
       <v-card
@@ -36,7 +36,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { EquipmentsStore } from '@/store'
-import IEquipment from '@/interfaces/IEquipement'
+import IEquipment from '@/interfaces/IEquipment'
 
 export default defineComponent({
   name: 'Equipments',
@@ -44,7 +44,8 @@ export default defineComponent({
     const equipments_store = EquipmentsStore()
     equipments_store.getEquipments()
     return {
-      equipments: computed(() => equipments_store.$state.equipments)
+      equipments: computed(() => equipments_store.$state.equipments),
+      equipments_store
     }
   },
   data() {
@@ -60,6 +61,20 @@ export default defineComponent({
     openFormEdit(selected_equipment: IEquipment) {
       this.current_equipment = selected_equipment
       this.form_edit = true
+    },
+    async removeEquipment(equipment_id: string) {
+      const confirm_delete = confirm('Você tem certeza que deseja excluir?')
+
+      if (confirm_delete) {
+        const result = await this.equipments_store.removeEquipment(equipment_id)
+
+        if (result) {
+          alert('Equipamento exluído com sucesso!')
+        }
+        else {
+          alert('Ocorru um erro!')
+        }
+      }
     }
   },
   computed: {

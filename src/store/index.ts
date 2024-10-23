@@ -1,8 +1,9 @@
 import IEvent from "@/interfaces/IEvent"
-import IEquipment from "@/interfaces/IEquipement"
+import IEquipment from "@/interfaces/IEquipment"
 import { defineStore } from "pinia"
 import { getDatabase, ref, child, get, update, remove, push } from "firebase/database"
 import IEventDB from "@/interfaces/IEventDB"
+import IEquipmentDB from "@/interfaces/IEquipmentDB"
 
 export const EquipmentsStore = defineStore('equipments', {
   state: () => ({
@@ -33,15 +34,20 @@ export const EquipmentsStore = defineStore('equipments', {
         throw (error)
       }
     },
-    async newEquipment(equipment: IEquipment) {
+    async newEquipment(equipment: IEquipmentDB) {
       if (!equipment.name || !equipment.responsible) {
         return 'Não pode estar vazio.'
       }
       return new Promise((resolve, reject) => {
         const db = getDatabase()
-        push(ref(db, 'equipments/'), equipment)
+        const id = push(child(ref(db), 'equipments')).key!
+        update(ref(db, `equipments/${id}`), equipment)
         .then(() => {
-          this.equipments.push(equipment)
+          this.equipments.push({
+            id: id,
+            name: equipment.name,
+            responsible: equipment.responsible
+          })
           return resolve(true)
         })
         .catch((error) => {
@@ -67,6 +73,19 @@ export const EquipmentsStore = defineStore('equipments', {
               break
             }
           }
+          return resolve(true)
+        })
+        .catch((error) => {
+          return reject(error)
+        })
+      })
+    },
+    async removeEquipment(equipment_id: string | number) {
+      return new Promise((resolve, reject) => {
+        const db = getDatabase()
+        remove(ref(db, `equipments/${equipment_id}`))
+        .then(() => {
+          this.equipments = this.equipments.filter(equipment => equipment.id !== equipment_id)
           return resolve(true)
         })
         .catch((error) => {
