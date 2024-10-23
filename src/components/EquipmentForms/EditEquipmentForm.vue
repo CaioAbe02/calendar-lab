@@ -23,7 +23,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { EquipmentsStore } from '@/store'
-import IEquipment from '@/interfaces/IEquipement';
+import IEquipment from '@/interfaces/IEquipment';
 
 export default defineComponent({
   name: 'EditEquipmentForm',
