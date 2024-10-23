@@ -10,22 +10,28 @@ export const EquipmentsStore = defineStore('equipments', {
   }),
   actions: {
     async getEquipments() {
-      return new Promise((resolve, reject) => {
+      try {
         const db = ref(getDatabase())
-        get(child(db, 'equipments'))
-        .then((response) => {
-          this.equipments = []
-          for(const key in response.val()) {
-            if (response.val().hasOwnProperty(key)) {
-              this.equipments.push(response.val()[key])
+        const response = await get(child(db, 'equipments'))
+
+        if (response.exists()) {
+          let equipments = [] as IEquipment[]
+          for (const [key, equipment_db] of Object.entries(response.val())) {
+            const equipment: IEquipment = {
+              id: key,
+              name: (equipment_db as IEquipment).name,
+              responsible: (equipment_db as IEquipment).responsible
             }
+            equipments.push(equipment)
           }
-          resolve(true)
-        })
-        .catch((error) => {
-          return reject(error)
-        })
-      })
+          this.equipments = equipments
+          return true
+        } else {
+          return false
+        }
+      } catch (error) {
+        throw (error)
+      }
     },
     async newEquipment(equipment: IEquipment) {
       if (!equipment.name || !equipment.responsible) {
@@ -43,6 +49,31 @@ export const EquipmentsStore = defineStore('equipments', {
         })
       })
     },
+    async updateEquipment(equipment: IEquipment) {
+      if (!equipment.name || !equipment.responsible) {
+        return 'Não pode estar vazio.'
+      }
+      const updatedEquipment = {
+        name: equipment.name,
+        responsible: equipment.responsible
+      }
+      return new Promise((resolve, reject) => {
+        const db = getDatabase()
+        update(ref(db, `equipments/${equipment.id}`), updatedEquipment)
+        .then(() => {
+          for (let index in this.equipments) {
+            if (this.equipments[index].id === equipment.id) {
+              this.equipments[index] = equipment
+              break
+            }
+          }
+          return resolve(true)
+        })
+        .catch((error) => {
+          return reject(error)
+        })
+      })
+    }
   }
 })
 
