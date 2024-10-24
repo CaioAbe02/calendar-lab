@@ -81,6 +81,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
 import { EquipmentsStore, EventsStore } from '@/store'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'NewEventForm',
@@ -96,9 +97,16 @@ export default defineComponent({
     }
   },
   setup() {
+    const route = useRoute()
+
     const equipments_store = EquipmentsStore()
     const equipments = computed(() => equipments_store.$state.equipments)
-    const equipment = ref(equipments.value[0])
+    let equipment = ref(equipments.value[0])
+    const equipment_name = route.params.id
+
+    if (equipment_name) {
+      equipment = ref(equipments.value.filter(equipment => equipment.name === equipment_name)[0])
+    }
 
     return {
       equipments,
