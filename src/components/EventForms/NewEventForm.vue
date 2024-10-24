@@ -127,7 +127,6 @@ export default defineComponent({
       const title = `${this.equipment.name} - ${this.user}`
 
       const response = await this.events_store.newEvent({
-        id: '0',
         title: title,
         start: event_start,
         end: event_end,

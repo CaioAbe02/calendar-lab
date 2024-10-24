@@ -127,24 +127,24 @@ export const EventsStore = defineStore('events', {
         throw (error)
       }
     },
-    async newEvent(event: IEvent) {
-      if (!event.title || !event.start || !event.end) {
+    async newEvent(event: IEventDB) {
+      if (!event.title || event.start === '' || event.end === '') {
         return 'Não pode estar vazio.'
       }
       else if (event.title.split(' - ').length > 2) {
         return "Retire o '-'"
       }
-      const newEvent = {
-        title: event.title,
-        start: event.start,
-        end: event.end
-      } as IEventDB
       return new Promise((resolve, reject) => {
         const db = getDatabase()
-        const id = push(child(ref(db), 'events')).key
-        update(ref(db, `events/${id}`), newEvent)
+        const id = push(child(ref(db), 'events')).key!
+        update(ref(db, `events/${id}`), event)
         .then(() => {
-          this.events.push(event)
+          this.events.push({
+            id: id,
+            title: event.title,
+            start: event.start,
+            end: event.end,
+          })
           return resolve(true)
         })
         .catch((error) => {
