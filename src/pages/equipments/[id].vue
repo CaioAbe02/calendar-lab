@@ -37,6 +37,8 @@
               text="Excluir"
               color="red"
               variant="flat"
+              :loading="remove_event_loading"
+              @click="removeEvent(current_event)"
             ></v-btn>
             <v-btn
               text="Editar"
@@ -78,6 +80,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const loading = ref(false)
+const remove_event_loading = ref(false)
 const form = ref(false)
 const event_edit_form = ref(false)
 const event_modal = ref(false)
@@ -127,6 +130,27 @@ const calendarApp = shallowRef(createCalendar({
 
 function refreshEvents() {
   eventsService.set(events.value)
+}
+
+async function removeEvent(event: CalendarEvent) {
+  remove_event_loading.value = true
+
+  const confirm_delete = confirm('Você tem certeza que deseja excluir?')
+
+  if (confirm_delete) {
+    const result = await events_store.removeEvent(event.id)
+
+    if (result) {
+      alert('Evento exluído com sucesso!')
+      refreshEvents()
+      event_modal.value = false
+    }
+    else {
+      alert('Ocorru um erro!')
+    }
+  }
+
+  remove_event_loading.value = false
 }
 
 function getCurrentDate(): string {
