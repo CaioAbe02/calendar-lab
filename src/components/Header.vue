@@ -3,13 +3,14 @@
     <template v-slot:prepend>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     </template>
-    <v-app-bar-title class="ma-0">
-      <div class="d-flex align-center">
-        <v-img
-          src="/public/logo.webp"
-          :width="170"
-          class="flex-grow-0"
-        ></v-img>
+    <v-app-bar-title>
+      <div class="d-flex align-center ga-2">
+        <div>
+          <v-img
+            src="/public/logo.webp"
+            :width="130"
+          ></v-img>
+        </div>
         <span>Agendamentos</span>
       </div>
     </v-app-bar-title>
