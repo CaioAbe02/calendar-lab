@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    DeleteConfirmation: typeof import('./src/components/DeleteConfirmation.vue')['default']
     EditEquipmentForm: typeof import('./src/components/EquipmentForms/EditEquipmentForm.vue')['default']
     EditEventForm: typeof import('./src/components/EventForms/EditEventForm.vue')['default']
     Equipments: typeof import('./src/components/Equipments.vue')['default']
