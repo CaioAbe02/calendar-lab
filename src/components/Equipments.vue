@@ -15,7 +15,7 @@
       >
       <template v-slot:append>
         <v-btn icon="mdi-pencil" @click.stop="openFormEdit(equipment)"></v-btn>
-        <v-btn icon="mdi-delete" @click.stop="removeEquipment(equipment.id)"></v-btn>
+        <v-btn icon="mdi-delete" @click.stop="openDeleteComponent(equipment)"></v-btn>
       </template>
       </v-card>
       <v-card
@@ -28,6 +28,12 @@
       <EditEquipmentForm
         @emit_close_edit_form="form_edit = false"
         :equipment="current_equipment"
+      />
+    </v-dialog>
+    <v-dialog v-model="delete_component">
+      <DeleteConfirmation
+        @emit_close_delete_component="delete_component = false"
+        @emit_delete_confirmation="removeEquipment()"
       />
     </v-dialog>
   </v-container>
@@ -51,7 +57,8 @@ export default defineComponent({
   data() {
     return {
       form_edit: false,
-      current_equipment: {} as IEquipment
+      current_equipment: {} as IEquipment,
+      delete_component: false,
     }
   },
   methods: {
@@ -62,18 +69,19 @@ export default defineComponent({
       this.current_equipment = selected_equipment
       this.form_edit = true
     },
-    async removeEquipment(equipment_id: string) {
-      const confirm_delete = confirm('Você tem certeza que deseja excluir?')
+    openDeleteComponent(selected_equipment: IEquipment) {
+      this.current_equipment = selected_equipment
+      this.delete_component = true
+    },
+    async removeEquipment() {
+      const result = await this.equipments_store.removeEquipment(this.current_equipment.id)
 
-      if (confirm_delete) {
-        const result = await this.equipments_store.removeEquipment(equipment_id)
-
-        if (result) {
-          alert('Equipamento exluído com sucesso!')
-        }
-        else {
-          alert('Ocorru um erro!')
-        }
+      if (result) {
+        alert('Equipamento exluído com sucesso!')
+        this.delete_component = false
+      }
+      else {
+        alert('Ocorru um erro!')
       }
     }
   },
