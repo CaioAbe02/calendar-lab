@@ -36,8 +36,7 @@
               text="Excluir"
               color="red"
               variant="flat"
-              :loading="remove_event_loading"
-              @click="removeEvent(current_event)"
+              @click="delete_component = true"
             ></v-btn>
             <v-btn
               text="Editar"
@@ -54,6 +53,12 @@
         @emit_close_edit_form="closeEditEventForm()"
         @emit_load_events="loadEvents()"
         :event="current_event"
+      />
+    </v-dialog>
+    <v-dialog v-model="delete_component">
+      <DeleteConfirmation
+        @emit_close_delete_component="delete_component = false"
+        @emit_delete_confirmation="removeEvent()"
       />
     </v-dialog>
   </v-container>
@@ -76,10 +81,10 @@ import { createEventsServicePlugin } from '@schedule-x/events-service'
 import { CalendarEvent } from '@schedule-x/calendar'
 
 const loading = ref(false)
-const remove_event_loading = ref(false)
 const form = ref(false)
 const event_edit_form = ref(false)
 const event_modal = ref(false)
+const delete_component = ref(false)
 let current_event = {} as CalendarEvent
 
 const equipments_store = EquipmentsStore()
@@ -128,25 +133,18 @@ function refreshEvents() {
   eventsService.set(events.value)
 }
 
-async function removeEvent(event: CalendarEvent) {
-  remove_event_loading.value = true
+async function removeEvent() {
+  const result = await events_store.removeEvent(current_event.id)
 
-  const confirm_delete = confirm('Você tem certeza que deseja excluir?')
-
-  if (confirm_delete) {
-    const result = await events_store.removeEvent(event.id)
-
-    if (result) {
-      alert('Evento exluído com sucesso!')
-      refreshEvents()
-      event_modal.value = false
-    }
-    else {
-      alert('Ocorru um erro!')
-    }
+  if (result) {
+    alert('Evento exluído com sucesso!')
+    refreshEvents()
+    delete_component.value = false
+    event_modal.value = false
   }
-
-  remove_event_loading.value = false
+  else {
+    alert('Ocorru um erro!')
+  }
 }
 
 function getCurrentDate(): string {
