@@ -1,5 +1,23 @@
 <template>
   <v-container>
+    <div class="d-flex align-center ga-4 mb-4">
+      <v-text-field
+        v-model="equipment_search"
+        label="Pesquisar equipamento"
+        prepend-inner-icon="mdi-magnify"
+        variant="outlined"
+        clearable
+        hide-details="auto"
+      ></v-text-field>
+      <v-btn
+        prepend-icon="mdi-plus"
+        variant="flat"
+        class="new_event_btn bg-blue"
+        to="equipments/new"
+      >
+        Equipamento
+      </v-btn>
+    </div>
     <div class="d-flex flex-column ga-4">
       <v-skeleton-loader
         v-for="n in 6"
@@ -8,7 +26,7 @@
         type="list-item-two-line"
       ></v-skeleton-loader>
       <v-card
-        v-for="equipment in equipments"
+        v-for="equipment in filteredEquipments"
         :title="equipment.name"
         :subtitle="`Responsável: ${equipment.responsible}`"
         @click="redirectToEquipmentsPage(equipment.name)"
@@ -18,11 +36,6 @@
         <v-btn icon="mdi-delete" @click.stop="openDeleteComponent(equipment)"></v-btn>
       </template>
       </v-card>
-      <v-card
-        title="Criar novo equipamento"
-        prepend-icon="mdi-plus"
-        to="equipments/new"
-      ></v-card>
     </div>
     <v-dialog v-model="form_edit">
       <EditEquipmentForm
@@ -56,6 +69,7 @@ export default defineComponent({
   },
   data() {
     return {
+      equipment_search: '',
       form_edit: false,
       current_equipment: {} as IEquipment,
       delete_component: false,
@@ -86,6 +100,18 @@ export default defineComponent({
     }
   },
   computed: {
+    filteredEquipments() {
+      let filtered_equipments = [...this.equipments]
+
+      if (this.equipment_search === '') {
+        return filtered_equipments
+      }
+
+      return filtered_equipments.filter(
+        equipment => equipment.name.toLowerCase().includes(this.equipment_search.toLowerCase())
+      )
+
+    },
     isLoading() {
       if (this.equipments.length == 0) {
         return true
