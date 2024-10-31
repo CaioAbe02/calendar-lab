@@ -3,7 +3,12 @@
     <template v-slot:prepend>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     </template>
-    <v-app-bar-title>🧪 GEPAM Agendamentos</v-app-bar-title>
+    <v-app-bar-title class="ma-0">
+      <v-img
+        src="/public/logo.webp"
+        width="170"
+      ></v-img>
+    </v-app-bar-title>
     <v-btn icon>
       <v-icon @click="changeTheme()">mdi-theme-light-dark</v-icon>
     </v-btn>
