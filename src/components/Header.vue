@@ -4,10 +4,14 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     </template>
     <v-app-bar-title class="ma-0">
-      <v-img
-        src="/public/logo.webp"
-        width="170"
-      ></v-img>
+      <div class="d-flex align-center">
+        <v-img
+          src="/public/logo.webp"
+          :width="170"
+          class="flex-grow-0"
+        ></v-img>
+        <span>Agendamentos</span>
+      </div>
     </v-app-bar-title>
     <v-btn icon>
       <v-icon @click="changeTheme()">mdi-theme-light-dark</v-icon>
