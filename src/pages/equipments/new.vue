@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <v-form validate-on="submit lazy" @submit.prevent="submit">
-      <v-sheet class="pa-6 mx-auto" max-width="500">
+    <v-sheet class="pa-6 mx-auto" max-width="500" elevation="4" rounded>
+      <v-form validate-on="submit lazy" @submit.prevent="submit">
         <h1 class="pb-6">Novo equipamento</h1>
         <v-text-field
           variant="outlined"
@@ -23,8 +23,8 @@
         >
           Adicionar
         </v-btn>
-      </v-sheet>
-    </v-form>
+      </v-form>
+    </v-sheet>
   </v-container>
 </template>
 
