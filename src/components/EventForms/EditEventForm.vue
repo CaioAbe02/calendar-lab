@@ -1,6 +1,6 @@
 <template>
   <v-sheet class="pa-6 mx-auto">
-    <v-form @submit.prevent="submit">
+    <v-form>
       <h1 class="pb-6">Editar agendamento</h1>
       <v-text-field
         variant="outlined"
@@ -72,9 +72,16 @@
       </v-text-field>
       <div class="d-flex justify-space-between">
         <v-btn @click="emitCloseEditForm()">Cancelar</v-btn>
-        <v-btn type="submit" class="bg-green" :loading="loading">Confirmar</v-btn>
+        <v-btn @click="edit_confirmation = true" class="bg-green" :loading="loading">Confirmar</v-btn>
       </div>
     </v-form>
+    <v-dialog v-model="edit_confirmation">
+      <ActionConfirmation
+        action="edit"
+        @emit_close_delete_component="edit_confirmation = false"
+        @emit_delete_confirmation="submit()"
+      />
+    </v-dialog>
   </v-sheet>
 </template>
 
@@ -100,6 +107,7 @@ export default defineComponent({
       menu_start: false,
       menu_end: false,
       loading: false,
+      edit_confirmation: false,
     }
   },
   setup(props) {
