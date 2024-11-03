@@ -1,6 +1,6 @@
 <template>
   <v-card class="pa-6 mx-auto w-100" max-width="350px">
-    <h2 class="mb-3">Confirmar exclusão</h2>
+    <h2 class="mb-3">Confirmar {{ actionConfirmation }}</h2>
     <v-form v-model="valid" validate-on="blur" @submit.prevent="submit">
       <v-text-field
         v-model="password"
@@ -21,10 +21,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   name: 'DeleteConfirmation',
+  props: {
+    action: {
+      required: true,
+      type: String as PropType<'delete' | 'edit'>
+    }
+  },
   data() {
     return {
       valid: false,
@@ -52,5 +58,14 @@ export default defineComponent({
       this.$emit('emit_close_delete_component')
     },
   },
+  computed: {
+    actionConfirmation(): string {
+      switch (this.action) {
+        case 'delete': return 'exclusão'
+        case 'edit': return 'edição'
+        default: return 'exlusão'
+      }
+    }
+  }
 })
 </script>
