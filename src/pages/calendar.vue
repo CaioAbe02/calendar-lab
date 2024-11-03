@@ -56,7 +56,8 @@
       />
     </v-dialog>
     <v-dialog v-model="delete_component">
-      <DeleteConfirmation
+      <ActionConfirmation
+        action="delete"
         @emit_close_delete_component="delete_component = false"
         @emit_delete_confirmation="removeEvent()"
       />
