@@ -11,7 +11,7 @@
             :width="130"
           ></v-img>
         </div>
-        <span>Agendamentos</span>
+        <span class="mt-4">Agendamentos</span>
       </div>
     </v-app-bar-title>
     <v-btn icon>
